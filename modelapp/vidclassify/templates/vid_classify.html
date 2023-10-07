@@ -1,0 +1,178 @@
+{% extends "imgclassify.html" %} 
+{% block innercontent %}
+<style>
+  input[type="file"] {
+    color: transparent;
+  }
+
+  #thumbnail {
+    position: relative;
+    right: 40px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  video {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+  }
+
+  @supports (object-fit: cover) {
+    video {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+    }
+  }
+
+  .upper-layer {
+    position: relative;
+    left: 35%;
+  }
+
+  label {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 10px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  label:hover {
+    background-color: #2980b9;
+  }
+
+  label:active {
+    transform: scale(0.95);
+  }
+
+  input[type="submit"] {
+    display: inline-block;
+    background-color: #2ab966;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  input[type="submit"]:hover {
+    background-color: rgb(40, 136, 40);
+  }
+
+  input[type="submit"]:active {
+    transform: scale(0.95);
+  }
+
+  @supports (object-fit: cover) {
+    video {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+    }
+  }
+</style>
+{% if prediction %}
+<div class="alert alert-success alert-dismissible fade show" style="position: absolute;text-align: center;width: 100%;top: 0.5%;background-color: antiquewhite;">
+  The action being performed in the video is <b>{{prediction}}</b>.
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
+
+<div class="main-heading">
+  <h1 style="font-stretch: extra-condensed; font-weight: bolder">
+    Video Action Prediction
+  </h1>
+  <p>
+    Using i3d model we can classify upto 400 actions<br />
+    being performed in the uploaded video.
+  </p>
+</div>
+
+<section
+  class="button-style"
+  style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+  "
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-sm-12 center-col text-center">
+        <button
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#formodal"
+          class="highlight-button btn btn-large button xs-margin-bottom-five"
+          data-abc="true"
+        >
+          Try it Yourself!
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div
+  class="modal fade"
+  id="formodal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content" style="padding: 20px">
+      <div class="upper-layer">
+        <form
+          action="{% url 'vidpredict' %}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <label for="vid">
+            <span>Choose Video</span>
+            <input type="file" accept=".mp4" id="vid" style="display: none" name="vid2" required/>
+          </label>
+          <div id="thumbnail"></div>
+          <input
+            type="submit"
+            value="Submit"
+            style="position: relative; left: 10px"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("vid").addEventListener("change", function (event) {
+    var file = event.target.files[0];
+    var fileReader = new FileReader();
+    if (file.type.match("video")) {
+      fileReader.onload = function () {
+        var video = document.createElement("video");
+        video.src = fileReader.result;
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.style.width = "200px";
+        video.style.height = "200px";
+        document.getElementById("thumbnail").innerHTML = "";
+        document.getElementById("thumbnail").appendChild(video);
+      };
+      fileReader.readAsDataURL(file);
+    }
+  });  
+</script>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "imgclassify.html" %}
+
+{% block innercontent %}
+  <div class="main-heading">
+    <h1 style="font-stretch: extra-condensed; font-weight: bolder">
+      Gender Classification on Facial Feature
+    </h1>
+    <p>
+      Using 7 facial features this ML model can classify the users gender<br />
+      with an accuracy score of 97.1%
+    </p>
+  </div>
+
+  <section class="button-style" style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, 0%);">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 center-col text-center">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#formodal"
+            class="highlight-button btn btn-large button xs-margin-bottom-five" data-abc="true">Give
+            Information</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div class="modal fade" id="formodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="header-modal">
+          <h1 class="modal-title fs-3" id="exampleModalLabel" style="text-align: center; font-weight: bold">
+            Input the Features below
+          </h1>
+        </div>
+        <div class="modal-body">
+          <form action={% url 'predictor' %} method="POST">
+            {% csrf_token %}
+            <label>forehead width(cm):</label><br />
+            <input type="number" step="0.01" name="fore_width" required />
+            <br />
+            <label>forehead height(cm):</label><br />
+            <input type="number" step="0.01" name="fore_height" required />
+            <br />
+            <label>long hair:</label><br />
+            <input type="checkbox" name="hair" />
+            <br />
+            <label>wide nose:</label><br />
+            <input type="checkbox" name="nose_w" />
+            <br />
+            <label>long nose:</label><br />
+            <input type="checkbox" name="nose_l" />
+            <br />
+            <label>thin lips:</label><br />
+            <input type="checkbox" name="lips_t" />
+            <br />
+            <label>long distance from nose to lip:</label><br />
+            <input type="checkbox" name="dist_n_l" />
+            <br />
+            <input class="highlight-button btn btn-small button xs-margin-bottom-five" type="submit" value="submit"
+              style="margin-left: 180px;" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

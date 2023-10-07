@@ -1,0 +1,16 @@
+{% extends "img_result.html" %}
+
+{% block prediction %}
+    {% if prediction == 'Male' %}
+    <script>
+        document.body.style.backgroundColor='#89CFF0';
+    </script>
+    {% else %} 
+    <script>
+        document.body.style.backgroundColor='pink';
+    </script>
+    {% endif %}
+    <div>
+    <h1>{{ prediction }}</h1>
+    </div>
+{% endblock  %}   
